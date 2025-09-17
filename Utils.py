@@ -4,6 +4,7 @@ import math
 from PyQt5.QtGui import *
 from enum import Enum
 from Global import *
+import os
 
 # 전역함수
 def getTsec(t: str):
@@ -527,6 +528,11 @@ def getCalibratedMoney(money, turnover, ceil):
 def write_to_file(file_path, content):
     """파일에 내용을 쓰는 함수"""
     try:
+        # Create directory if it doesn't exist
+        directory = os.path.dirname(file_path)
+        if not os.path.exists(directory):
+            os.makedirs(directory, exist_ok=True)
+
         with open(file_path, "w", encoding='utf-8') as f:
             f.write(content)
             print(f"{file_path} File writing complete @ {datetime.datetime.now().strftime('%H:%M:%S')}")

@@ -1693,7 +1693,7 @@ class MyWindow(QMainWindow):
 
         try:
             # with open(DirFileName, 'r', encoding='utf-8') as f:
-            with open(DirFileName, 'r') as f:
+            with open(DirFileName, 'r', encoding='utf-8') as f:
             
         #f = open(DirFileName, 'r')
                 rdr = csv.reader(f, delimiter=',')
