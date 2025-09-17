@@ -22,7 +22,7 @@ class DayData:
         self.세력대금, self.회전율 = [], []
 
         self.세력봉, self.주도주 = [], []
-        self.상한가, self.단일가 = [], []
+        self.상한가 = []
         self.최고대금 = {120:[], 240:[]}
         self.최고대금갱신 = {120:[], 240:[]}
         self.이평5저가, self.이평5고가, self.이평20저가, self.이평20중가, self.이평20고가 = [], [], [], [], []
@@ -49,11 +49,6 @@ class DayData:
             self.고가등락율.append(0)
             self.저가등락율.append(0)
             self.종가등락율.append(0)
-
-        if self.종가==self.시가 and self.종가==self.고가 and self.종가==self.저가:
-            self.단일가.append(True)
-        else:
-            self.단일가.append(False)
 
         for key in self.신고가갱신.keys():
             if len(self.신고가[key]) > 0:
