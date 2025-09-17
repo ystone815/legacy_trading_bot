@@ -525,16 +525,33 @@ def getCalibratedMoney(money, turnover, ceil):
 
 
 
-def write_to_file(file_path, content):
+def write_to_file(file_path, content, encoding='utf-8-sig'):
     """파일에 내용을 쓰는 함수"""
     try:
-        # Create directory if it doesn't exist
         directory = os.path.dirname(file_path)
-        if not os.path.exists(directory):
+        if directory and not os.path.exists(directory):
             os.makedirs(directory, exist_ok=True)
 
-        with open(file_path, "w", encoding='utf-8') as f:
+        with open(file_path, "w", encoding=encoding) as f:
             f.write(content)
             print(f"{file_path} File writing complete @ {datetime.datetime.now().strftime('%H:%M:%S')}")
     except Exception as e:
         print(f"File writing error: {e}")
+
+
+def read_text_lines(file_path, encoding_candidates=None):
+    """여러 인코딩을 시도하며 텍스트 라인을 읽는다."""
+    if encoding_candidates is None:
+        encoding_candidates = ("utf-8-sig", "utf-8", "cp949")
+
+    last_error = None
+    for encoding in encoding_candidates:
+        try:
+            with open(file_path, "r", encoding=encoding) as f:
+                return f.readlines()
+        except UnicodeDecodeError as err:
+            last_error = err
+            continue
+    if last_error:
+        raise last_error
+    return []

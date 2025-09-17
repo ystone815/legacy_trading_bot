@@ -1751,26 +1751,21 @@ class MyWindow(QMainWindow):
         self.datas[code].dayDatas.clear()
 
         try:
-            with open(FileName, 'r') as f:
-                rdr = f.readlines()
-                for count, line_raw in enumerate(rdr):
-                    line = line_raw.split(',')
-                    if count == 0 :  # 첫줄
-                        continue
-                    #if line[0] == '' or line[0]=='EOL' or line[0].lstrip() == TODAY:  # / 끝줄 / 당일데이터 처리
-                    if line[0] == '' or line[0] == 'EOL':  # / 끝줄 / 당일데이터 처리
-                        break
+            rdr = read_text_lines(FileName)
+            for count, line_raw in enumerate(rdr):
+                line = line_raw.split(',')
+                if count == 0 :  # 첫줄
+                    continue
+                if line[0] == '' or line[0] == 'EOL':  # / 끝줄 / 당일데이터 처리
+                    break
 
-                    if self.datas[code].유통주식수>0: 주식수 = self.datas[code].유통주식수
-                    else:                            주식수 = self.datas[code].주식수
-                    #print(line[0].lstrip(), int(line[1]), float(line[2])/100, int(line[3]), int(line[4]), int(line[5]), int(line[6]))
-                    self.datas[code].dayDatas.append(line[0].lstrip(), int(line[1]),
-                                               float(line[2])/100, int(line[3]),
-                                               int(line[4]), int(line[5]), int(line[6]), 주식수)
-                print(f"일봉로드 완료 {datetime.datetime.now().strftime('%H:%M:%S')} : {FileName}")
-                self.datas[code].일봉로드 = True
-           
-                f.close
+                if self.datas[code].유통주식수>0: 주식수 = self.datas[code].유통주식수
+                else:                            주식수 = self.datas[code].주식수
+                self.datas[code].dayDatas.append(line[0].lstrip(), int(line[1]),
+                                           float(line[2])/100, int(line[3]),
+                                           int(line[4]), int(line[5]), int(line[6]), 주식수)
+            print(f"일봉로드 완료 {datetime.datetime.now().strftime('%H:%M:%S')} : {FileName}")
+            self.datas[code].일봉로드 = True
         except Exception as e:
             print(f"File Load error @ loadDayDataSingle {FileName} : {e}")
 
@@ -1814,22 +1809,20 @@ class MyWindow(QMainWindow):
 
     def loadUserConfig(self):
         try:
-            with open(USER_COND_FILE, 'r') as f:
-                lines = f.readlines()
-                for line in lines:
-                    config = line.split(' ')
-                    if config[0] == '랜덤복기개수':
-                        self.labelEditDict['랜덤복기개수'].setText(config[1])
-                    elif config[0] == '복기날짜':
-                        self.labelEditDict['복기날짜'].setText(config[1])
-                    elif config[0] == 'CHECK_BOX':
-                        self.checkBoxDict[config[1]].setCheckState(config[2])
-                    elif config[0] == 'CHECK_BOX_SUB':
-                        self.checkBoxDictSub[config[1]].setCheckState(config[2])
-                    elif config[0] == 'TABLE_COMBO_INDEX':
-                        self.tableArray[int(config[1])].combo.setCurrentIndex(int(config[2]))
-                print(f"Reading User Config File {USER_COND_FILE} : Done")
-                f.close
+            lines = read_text_lines(USER_COND_FILE)
+            for line in lines:
+                config = line.split(' ')
+                if config[0] == '랜덤복기개수':
+                    self.labelEditDict['랜덤복기개수'].setText(config[1])
+                elif config[0] == '복기날짜':
+                    self.labelEditDict['복기날짜'].setText(config[1])
+                elif config[0] == 'CHECK_BOX':
+                    self.checkBoxDict[config[1]].setCheckState(config[2])
+                elif config[0] == 'CHECK_BOX_SUB':
+                    self.checkBoxDictSub[config[1]].setCheckState(config[2])
+                elif config[0] == 'TABLE_COMBO_INDEX':
+                    self.tableArray[int(config[1])].combo.setCurrentIndex(int(config[2]))
+            print(f"Reading User Config File {USER_COND_FILE} : Done")
         except Exception as e:
             print(f"File Load error : {e}")
 
@@ -1939,21 +1932,19 @@ class MyWindow(QMainWindow):
 
     def loadCodeList(self):
         try:
-            with open(CODE_LIST_FILE, 'r') as f:
-                lines = f.readlines()
-                for line in lines:
-                    config = line.split(' ')
+            lines = read_text_lines(CODE_LIST_FILE)
+            for line in lines:
+                config = line.split(' ')
 
-                    if config[0] != '':
-                        code, name = config[0], config[1]
+                if config[0] != '':
+                    code, name = config[0], config[1]
 
-                        self.datas[code] = RealData(code, name, self)
-                        self.codes.append(code)
-                        self.names.append(name)
-                        self.nameToCode[name] = code
+                    self.datas[code] = RealData(code, name, self)
+                    self.codes.append(code)
+                    self.names.append(name)
+                    self.nameToCode[name] = code
 
-                print(f"Reading {CODE_LIST_FILE} File : Done")
-                f.close
+            print(f"Reading {CODE_LIST_FILE} File : Done")
         except Exception as e:
             print(f"File Load error : {e}")
 
@@ -1999,37 +1990,33 @@ class MyWindow(QMainWindow):
         tempStr = f"{tempStr}EOL"
 
         try:
-            with open(TRADE_DATA_FILE, "w") as f:
-                f.write(tempStr)
-                print(f"{TRADE_DATA_FILE} File writting complete @ {datetime.datetime.now().strftime('%H:%M:%S')}")
+            write_to_file(TRADE_DATA_FILE, tempStr)
         except Exception as e:
             print(f"File writting error : {e}")
 
     def loadTradeDataAll(self):
         try:
-            with open(TRADE_DATA_FILE, 'r') as f:
-                lines = f.readlines()
-                for line in lines:
-                    config = line.split(',')
+            lines = read_text_lines(TRADE_DATA_FILE)
+            for line in lines:
+                config = line.split(',')
 
-                    if config[0] != 'EOL' and len(config)>0:
-                        name, code = config[0], config[1]
-                        고가240, 고가120 = int(config[2]), int(config[3])
-                        R0, R1, R2, R3 = int(config[4]), int(config[5]), int(config[6]), int(config[7])
-                        stateRB = int(config[8])
-                        if config[9]=='True':   lastStandby = True
-                        else:                   lastStandby = False
-                        if config[10]=='True':  lastTrade = True
-                        else:                   lastTrade = False
+                if config[0] != 'EOL' and len(config)>0:
+                    name, code = config[0], config[1]
+                    고가240, 고가120 = int(config[2]), int(config[3])
+                    R0, R1, R2, R3 = int(config[4]), int(config[5]), int(config[6]), int(config[7])
+                    stateRB = int(config[8])
+                    if config[9]=='True':   lastStandby = True
+                    else:                   lastStandby = False
+                    if config[10]=='True':  lastTrade = True
+                    else:                   lastTrade = False
 
-                        RB_물량, RB_평단, RB_매수일, RB_기준일 = float(config[11]), int(config[12]), config[13], config[14]
+                    RB_물량, RB_평단, RB_매수일, RB_기준일 = float(config[11]), int(config[12]), config[13], config[14]
 
-                        if code in self.codes:
-                            self.datas[code].tradeData.update(고가240, 고가120, R0, R1, R2, R3, stateRB,
-                                lastStandby, lastTrade, RB_물량, RB_평단, RB_매수일, RB_기준일)
+                    if code in self.codes:
+                        self.datas[code].tradeData.update(고가240, 고가120, R0, R1, R2, R3, stateRB,
+                            lastStandby, lastTrade, RB_물량, RB_평단, RB_매수일, RB_기준일)
 
-                print(f"Reading {TRADE_DATA_FILE} File : Done")
-                f.close
+            print(f"Reading {TRADE_DATA_FILE} File : Done")
         except Exception as e:
             print(f"File Load error : {e}")
 
