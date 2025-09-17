@@ -397,13 +397,7 @@ class MyWindow(QMainWindow):
                     tempStr = f"{tempStr}{x},"
 
             DATE_FILE = f"{DAY_DIR_NAME}/{self.datas[code].name}.csv"
-
-            try:
-                with open(DATE_FILE, "w") as f:
-                    f.write(tempStr)
-                    print(f"{DATE_FILE} File writting complete @ {datetime.datetime.now().strftime('%H:%M:%S')}")
-            except Exception as e:
-                print(f"File writting error : {e}")
+            write_to_file(DATE_FILE, tempStr)
 
             #if sRqName == "주식일봉차트조회단일" and len(self.datas[code].dayDatas.종가)==0:
             if sRqName == "주식일봉차트조회단일":
@@ -1934,24 +1928,14 @@ class MyWindow(QMainWindow):
         for i in range(NUM_TABLE):
             tempStr = f"{tempStr}TABLE_COMBO_INDEX {i} {self.tableArray[i].combo.currentIndex()} \n"
         #    tempStr = f"{tempStr} \n"
-        try:
-            with open(USER_COND_FILE, "w") as f:
-                f.write(tempStr)
-                print(f"{USER_COND_FILE} File writting complete @ {datetime.datetime.now().strftime('%H:%M:%S')}")
-        except Exception as e:
-            print(f"File writting error : {e}")
+        write_to_file(USER_COND_FILE, tempStr)
 
     def saveCodeList(self):
         tempStr = ""
         for code in self.codes:
             realData = self.datas[code]
             tempStr = f"{tempStr}{realData.code},{realData.name},{realData.주식수},{realData.유통주식수},{realData.시가총액}, \n"
-        try:
-            with open(CODE_LIST_FILE, "w") as f:
-                f.write(tempStr)
-                print(f"{CODE_LIST_FILE} File writting complete @ {datetime.datetime.now().strftime('%H:%M:%S')}")
-        except Exception as e:
-            print(f"File writting error : {e}")
+        write_to_file(CODE_LIST_FILE, tempStr)
 
     def loadCodeList(self):
         try:
@@ -2187,13 +2171,7 @@ class MyWindow(QMainWindow):
                              f"{realData.시가}, {realData.고가}, {realData.저가}, {realData.현재가},"
 
             DATE_FILE = f"{DAY_DIR_NAME}/{self.datas[code].name}.csv"
-
-            try:
-                with open(DATE_FILE, "w") as f:
-                    f.write(tempStr)
-                    print(f"{DATE_FILE} File writting complete @ {datetime.datetime.now().strftime('%H:%M:%S')}")
-            except Exception as e:
-                print(f"File writting error : {e}")
+            write_to_file(DATE_FILE, tempStr)
 
     def getDayData(self):
         # 전 종목의 일봉 데이터

@@ -524,3 +524,11 @@ def getCalibratedMoney(money, turnover, ceil):
 
 
 
+def write_to_file(file_path, content):
+    """파일에 내용을 쓰는 함수"""
+    try:
+        with open(file_path, "w", encoding='utf-8') as f:
+            f.write(content)
+            print(f"{file_path} File writing complete @ {datetime.datetime.now().strftime('%H:%M:%S')}")
+    except Exception as e:
+        print(f"File writing error: {e}")
