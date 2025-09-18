@@ -1,4 +1,5 @@
 import csv
+import os
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
@@ -16,6 +17,11 @@ from DayTable import *
 from SectorData import *
 import time
 from threading import Thread
+
+
+def ensure_data_directories():
+    for data_dir in (LOAD_DIR_NAME, DAY_DIR_NAME, STOCK_COUNT_PATH):
+        os.makedirs(data_dir, exist_ok=True)
 
 class SubWindow(QMainWindow):
     def __init__(self, parent, startX, startY, widthX, widthY, title=None):
@@ -2251,6 +2257,8 @@ if __name__ == "__main__":
     import cProfile, pstats, io
     from pstats import SortKey
     import sys
+
+    ensure_data_directories()
 
     if PROFILE_EN:
         pr = cProfile.Profile()
